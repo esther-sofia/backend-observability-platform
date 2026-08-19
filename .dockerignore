@@ -1,0 +1,52 @@
+# =====================================
+# 🐍 Python / Virtual Envs
+# =====================================
+venv/
+env/
+__pycache__/
+*.py[cod]
+
+# =====================================
+# 🧱 Django / Local
+# =====================================
+*.sqlite3
+media/
+staticfiles/
+
+# =====================================
+# 🔐 Secrets / Env
+# =====================================
+.env
+*.pem
+*.key
+*.crt
+
+# =====================================
+# 🧰 Git & System
+# =====================================
+.git
+.gitignore
+.DS_Store
+*.log
+*.pid
+
+# =====================================
+# 🧪 Node / JS (if front-end present)
+# =====================================
+node_modules/
+
+# =====================================
+# 📊 Monitoring (Prometheus / Grafana)
+# =====================================
+prometheus_data/
+grafana_data/
+alertmanager_data/
+monitoring/*.cache
+monitoring/*.token
+
+# =====================================
+# 🧪 Tests / Reports
+# =====================================
+__tests__/
+coverage/
+pytest_cache/

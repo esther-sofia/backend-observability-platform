@@ -1,0 +1,157 @@
+groups:
+
+# ================================
+# 🧭 Availability Alerts
+# ================================
+- name: availability
+  rules:
+  - alert: GatewayDown
+    expr: up{job="gateway"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Gateway service is DOWN"
+      description: |
+        Prometheus has detected that the Gateway service (job={{ $labels.job }}) is unreachable for over 1 minute.
+        Check the container or process named 'gateway'.
+        Instance: {{ $labels.instance }}
+
+  - alert: AppDown
+    expr: up{job="django"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Web application is DOWN"
+      description: |
+        The web application (job={{ $labels.job }}) is not responding for more than 1 minute.
+        Verify that the Django container 'web' is running and healthy.
+        Instance: {{ $labels.instance }}
+
+  - alert: CeleryExporterDown
+    expr: up{job="celery-exporter"} == 0
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Celery exporter is DOWN"
+      description: |
+        The Celery exporter target (job={{ $labels.job }}) is unreachable for 30 seconds.
+        Check the 'celery-exporter' container or service logs.
+        Instance: {{ $labels.instance }}
+
+  - alert: PostgresExporterDown
+    expr: up{job="postgres_exporter"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "PostgreSQL exporter is DOWN"
+      description: |
+        The PostgreSQL exporter (job={{ $labels.job }}) is not reachable for over 1 minute.
+        Ensure 'postgres_exporter' container is up and that PostgreSQL itself is reachable.
+        Instance: {{ $labels.instance }}
+
+  - alert: RedisExporterDown
+    expr: up{job="redis_exporter"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Redis exporter is DOWN"
+      description: |
+        The Redis exporter (job={{ $labels.job }}) is not responding for more than 1 minute.
+        Check the Redis exporter container or connection to Redis.
+        Instance: {{ $labels.instance }}
+
+  # 🚨 CRUCIAL FIX: Checks if the exporter can connect to the Redis SERVER
+  - alert: RedisServerDown
+    expr: redis_up{job="redis_exporter"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Redis Server is DOWN"
+      description: |
+        The Redis Exporter is reporting that it cannot connect to the Redis server for more than 1 minute.
+        Check the status of the Redis Server container.
+        Instance: {{ $labels.instance }}
+
+
+# ================================
+# ⚙️ Performance Alerts
+# ================================
+- name: performance
+  rules:
+  - alert: NodeHighCPU
+    expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 85
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High CPU usage detected"
+      description: |
+        CPU utilization on instance {{ $labels.instance }} has exceeded 85% for more than 2 minutes.
+        Investigate high-load processes or potential CPU starvation.
+
+  - alert: NodeLowMemory
+    expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) < 0.15
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Low memory available"
+      description: |
+        Memory availability on {{ $labels.instance }} is below 15%.
+        Check for memory leaks or increase available memory.
+
+  - alert: DiskAlmostFull
+    expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.10
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Disk almost full"
+      description: |
+        Less than 10% disk space is available on {{ $labels.instance }}.
+        Consider cleaning logs, rotating files, or expanding disk space.
+
+
+# ================================
+# ⏱️ Latency & Error Alerts
+# ================================
+- name: latency_and_errors
+  rules:
+  - alert: HighAppErrorRate
+    expr: (sum(rate(http_requests_total{job="web",status=~"5.."}[5m])) by (job))
+          /
+          (sum(rate(http_requests_total{job="web"}[5m])) by (job)) > 0.05
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High 5xx error rate for web app"
+      description: |
+        The web app (job={{ $labels.job }}) has more than 5% of total requests failing with 5xx errors in the past 5 minutes.
+        Check logs for exceptions or API timeouts.
+
+  - alert: High95thLatency
+    expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="web"}[5m])) by (le)) > 2
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High latency (p95 > 2s)"
+      description: |
+        95th percentile response time for the web app (job={{ $labels.job }}) exceeded 2 seconds over 5 minutes.
+        Investigate slow database queries, network delays, or heavy load.
+
+
+# ================================
+# 🧵 Celery Task Alerts
+# ================================
+- name: celery
+  rules:
+    # Rule body goes here when you define Celery task alerts (e.g., cel_task_failure_total)
+    # The list is intentionally empty to fix the syntax error.

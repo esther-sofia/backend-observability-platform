@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+*.egg
+venv/
+env/
+.env
+
+# Django / local
+*.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# PyCharm / VSCode
+.idea/
+.vscode/
+
+# Docker
+docker-compose.override.yml
+*.log
+*.pid
+*.sock
+*.tmp
+
+# =====================================
+# 📊 Monitoring (Prometheus / Grafana)
+# =====================================
+# Don't commit data storage volumes
+prometheus_data/
+grafana_data/
+alertmanager_data/
+
+# Don’t commit sensitive configs or generated tokens
+monitoring/alertmanager_secrets.yml
+monitoring/*.token
+monitoring/*.cache
+
+# macOS
+.DS_Store
+
+# =====================================
+# 🧪 Tests / Reports
+# =====================================
+coverage/
+*.cover
+*.py,cover
+pytest_cache/
+htmlcov/
+grafana_backup.db
+replacements.txt

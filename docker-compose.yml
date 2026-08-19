@@ -1,0 +1,212 @@
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      retries: 5
+
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
+      PG_EXPORTER_EXTEND_QUERY_PATH: /config/postgres_queries.yml
+    volumes:
+      - ./postgres_queries.yml:/config/postgres_queries.yml:ro
+    depends_on:
+      - db
+    ports:
+      - "9187:9187"
+
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    restart: unless-stopped
+    environment:
+      - REDIS_ADDR=redis:6379
+    ports:
+      - "9121:9121"
+    depends_on:
+      - redis
+      
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput || true &&
+             python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=observability_project.settings
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    working_dir: /app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+  
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.rootfs=/'
+    
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: project1-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - web
+
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: project1-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    depends_on:
+      - prometheus
+    volumes:
+      - project1_grafana_data:/var/lib/grafana
+
+  celery:
+    build: .
+    container_name: celery
+    command: celery -A observability_project worker -l info -E
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  flower:
+    build: .
+    container_name: celery-flower
+    restart: unless-stopped
+    env_file:
+      - .env
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: >
+      bash -c "pip install --no-cache-dir celery[redis] flower &&
+             celery -A observability_project flower --broker=redis://redis:6379/0 --port=5555"
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - celery
+
+
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    command: celery -A observability_project beat -l info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - celery
+    restart: unless-stopped
+
+  celery-exporter:
+    image: danihodovic/celery-exporter:latest
+    platform: linux/amd64  
+    container_name: celery-exporter
+    restart: unless-stopped
+    environment:
+      - BROKER_URL=${CELERY_BROKER_URL}
+      - BACKEND_URL=${CELERY_RESULT_BACKEND}
+    command: >
+      --broker-url=redis://redis:6379/0 --port=9808
+    ports:
+      - "9808:9808"
+    depends_on:
+      - redis
+      - celery
+    networks:
+      - default
+ 
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    env_file:
+      - .env
+    restart: unless-stopped
+    
+    # 1. Set the new script as the entrypoint
+    entrypoint: /entrypoint.sh
+    
+    volumes:
+      # 2. Mount the config file as the TEMPLATE (read-only)
+      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.template.yml:ro
+      
+      # 3. Mount the custom entrypoint script and make it executable inside the container
+      - ./entrypoint.sh:/entrypoint.sh
+
+  simulator:
+    profiles: ["tools"]
+    build: .
+    command: python tools/simulate_traffic.py
+    depends_on:
+      - web
+      - db
+      - redis
+    env_file:
+      - .env
+    restart: "no"
+volumes:
+  db_data:
+  redis_data:
+  project1_grafana_data:
+    external: true
+  prometheus_data:

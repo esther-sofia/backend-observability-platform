@@ -1,0 +1,46 @@
+global:
+  scrape_interval: 5s
+
+alerting:
+    alertmanagers:
+      - static_configs:
+          - targets:
+              - alertmanager:9093
+
+scrape_configs:
+  - job_name: 'django'
+    metrics_path: metrics
+    static_configs:
+      - targets: ['web:8000']  # 'web' is your Django container name in docker-compose
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'postgres_exporter'
+    static_configs:
+      - targets: ['postgres_exporter:9187']
+      
+  - job_name: 'redis_exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+# 🧮 Celery / Flower metrics
+  - job_name: 'flower'
+    static_configs:
+      - targets: ['celery-flower:5555']
+
+  - job_name: 'celery-exporter'
+    static_configs:
+      - targets: ['celery-exporter:9808']
+
+rule_files:
+  - "alert_rules.yml"
+
+
+  
+  

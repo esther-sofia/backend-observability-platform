@@ -1,0 +1,26 @@
+global:
+  resolve_timeout: 5m
+  slack_api_url: ${ALERT_SLACK_WEBHOOK}
+
+route:
+  receiver: 'slack-notifications'
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 1h
+
+receivers:
+  - name: 'slack-notifications'
+    slack_configs:
+      - send_resolved: true
+        channel: '#alerts_1'
+        username: 'prometheus-alerts'
+        title: '[{{ .Status | toUpper }}] {{ .CommonAnnotations.summary }}'
+        text: '{{ .CommonAnnotations.description }}' 
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
+      
+
