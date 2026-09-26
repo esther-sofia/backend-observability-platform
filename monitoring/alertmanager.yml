@@ -19,7 +19,6 @@ receivers:
         text: |-
           {{ range .Alerts }}*{{ .Annotations.summary }}*
           {{ .Annotations.description }}
-          Instance: {{ .Labels.instance }}
           {{ end }}
 inhibit_rules:
   - source_match:
