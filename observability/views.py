@@ -29,3 +29,10 @@ class MeetingListCreateView(generics.ListCreateAPIView):
 class MessageListCreateView(generics.ListCreateAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+
+
+
+from django.http import JsonResponse
+
+def health_view(request):
+    return JsonResponse({"status": "ok"})

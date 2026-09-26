@@ -16,10 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from observability.views import health_view
+
 
 
 urlpatterns = [
-    path('', include('django_prometheus.urls')),   # ✅ expose /metrics
+    path('', include('django_prometheus.urls')), 
+    path('health/', health_view, name='health'),   # health check
+  # ✅ expose /metrics
     path('admin/', admin.site.urls),
     path('observability/', include('observability.urls')),
 ]
