@@ -18,13 +18,13 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 0,
+  "id": 5,
   "links": [],
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -101,7 +101,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -168,7 +168,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -235,7 +235,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -329,7 +329,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -423,7 +423,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -517,7 +517,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -612,7 +612,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -706,7 +706,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -774,7 +774,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -869,7 +869,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -963,7 +963,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -1028,7 +1028,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -1122,7 +1122,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -1229,5 +1229,5 @@
   "timezone": "browser",
   "title": "Redis / Cache Observability",
   "uid": "adphts4",
-  "version": 18
+  "version": 2
 }

@@ -37,7 +37,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -110,7 +110,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -183,7 +183,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -278,7 +278,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -403,7 +403,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -499,7 +499,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -595,7 +595,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -674,7 +674,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf2br4ixhxlhcd"
+        "uid": "ff34mmyu13jswd"
       },
       "fieldConfig": {
         "defaults": {
@@ -757,5 +757,5 @@
   "timezone": "browser",
   "title": "Database Observability Dashboard",
   "uid": "adl8z4g",
-  "version": 19
+  "version": 2
 }
