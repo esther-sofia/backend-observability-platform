@@ -389,8 +389,7 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "short"
+          }
         },
         "overrides": []
       },
@@ -400,7 +399,7 @@
         "x": 12,
         "y": 8
       },
-      "id": 4,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [],
@@ -417,14 +416,14 @@
       "pluginVersion": "12.2.1",
       "targets": [
         {
-          "editorMode": "builder",
-          "expr": "rate(django_http_requests_total_by_method_total[1m])",
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.99,sum by(le,view)(rate(django_http_requests_latency_seconds_by_view_method_bucket[1m])))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Active Requests(in-progress)",
+      "title": "latency(p99-deep tail)",
       "type": "timeseries"
     },
     {
@@ -526,6 +525,7 @@
         "type": "prometheus",
         "uid": "ff34mmyu13jswd"
       },
+      "description": "\"shows total incoming speed per second\"",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -565,6 +565,7 @@
               "mode": "off"
             }
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -578,17 +579,18 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "reqps"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 24
+        "x": 12,
+        "y": 16
       },
-      "id": 6,
+      "id": 1,
       "options": {
         "legend": {
           "calcs": [],
@@ -605,14 +607,18 @@
       "pluginVersion": "12.2.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "histogram_quantile(0.99,sum by(le,view)(rate(django_http_requests_latency_seconds_by_view_method_bucket[1m])))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cf2br4ixhxlhcd"
+          },
+          "editorMode": "builder",
+          "expr": "rate(django_http_requests_total_by_method_total[1m])",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "latency(p99-deep tail)",
+      "title": "Request Rate(RPS)",
       "type": "timeseries"
     },
     {
@@ -680,7 +686,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 24
       },
       "id": 5,
       "options": {
@@ -777,8 +783,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 40
+        "x": 12,
+        "y": 24
       },
       "id": 2,
       "options": {
@@ -806,107 +812,6 @@
       ],
       "title": "Error rate",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "ff34mmyu13jswd"
-      },
-      "description": "\"shows total incoming speed per second\"",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 48
-      },
-      "id": 1,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cf2br4ixhxlhcd"
-          },
-          "editorMode": "builder",
-          "expr": "rate(django_http_requests_total_by_method_total[1m])",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "\"Request Rate(RPS)\"",
-      "type": "timeseries"
     }
   ],
   "preload": false,
@@ -924,5 +829,5 @@
   "timezone": "browser",
   "title": "Application Performance",
   "uid": "ad9dnhp",
-  "version": 21
+  "version": 23
 }
