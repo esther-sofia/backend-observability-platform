@@ -5,6 +5,8 @@ groups:
 # ================================
 - name: availability
   rules:
+  # PLACEHOLDER: no 'gateway' job exists in prometheus.yml yet, so this alert cannot fire.
+  # Activate it when a gateway (e.g. Nginx in front of Django) is added as a scrape job named 'gateway
   - alert: GatewayDown
     expr: up{job="gateway"} == 0
     for: 1m
@@ -124,9 +126,9 @@ groups:
 - name: latency_and_errors
   rules:
   - alert: HighAppErrorRate
-    expr: (sum(rate(http_requests_total{job="web",status=~"5.."}[5m])) by (job))
+    expr: sum by (job) (rate(django_http_responses_total_by_status_total{job="django",status=~"5.."}[5m]))
           /
-          (sum(rate(http_requests_total{job="web"}[5m])) by (job)) > 0.05
+          sum by (job) (rate(django_http_responses_total_by_status_total{job="django"}[5m])) > 0.05
     for: 5m
     labels:
       severity: critical
@@ -137,7 +139,7 @@ groups:
         Check logs for exceptions or API timeouts.
 
   - alert: High95thLatency
-    expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="web"}[5m])) by (le)) > 2
+    expr: histogram_quantile(0.95, sum by (le, job) (rate(django_http_requests_latency_seconds_by_view_method_bucket{job="django"}[5m]))) > 2    
     for: 5m
     labels:
       severity: warning
