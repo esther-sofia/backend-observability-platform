@@ -11,8 +11,8 @@ import os
 
 BASE = "http://web:8000"   # inside Docker network
 
-RUN_SECONDS = 120
-APP_THREADS = 40
+RUN_SECONDS = 420
+APP_THREADS = 10
 DB_THREADS = 5
 
 # ================================================================
