@@ -176,7 +176,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": [
           {
@@ -295,7 +295,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
@@ -389,7 +390,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
@@ -483,7 +485,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
@@ -525,7 +528,7 @@
         "type": "prometheus",
         "uid": "ff34mmyu13jswd"
       },
-      "description": "\"shows total incoming speed per second\"",
+      "description": "shows total incoming speed per second",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -678,7 +681,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
@@ -829,5 +833,5 @@
   "timezone": "browser",
   "title": "Application Performance",
   "uid": "ad9dnhp",
-  "version": 23
+  "version": 29
 }
