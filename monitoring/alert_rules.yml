@@ -157,3 +157,18 @@ groups:
   rules:
     # Rule body goes here when you define Celery task alerts (e.g., cel_task_failure_total)
     # The list is intentionally empty to fix the syntax error.
+
+
+
+- name: database
+  rules:
+  - alert: PostgresDown
+    expr: pg_up{job="postgres_exporter"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "PostgreSQL is DOWN"
+      description: |
+        postgres_exporter cannot connect to PostgreSQL for over 1 minute.
+        Check the 'db' container.
