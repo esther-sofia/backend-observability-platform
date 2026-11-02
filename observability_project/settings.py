@@ -39,10 +39,10 @@ def getenv_bool(name, default=False):
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a8p*xlg65j2^m0z_+c@rri%3*g*yh__x+^@y^o^jmut4x+o^rz'
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv_bool("DEBUG", False)
 
 ALLOWED_HOSTS = ["localhost","127.0.0.1","0.0.0.0","web","prometheus"]
 
@@ -106,6 +106,7 @@ if os.getenv('POSTGRES_HOST'):
             'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
             'HOST': os.getenv('POSTGRES_HOST', 'db'),
             'PORT': os.getenv('POSTGRES_PORT', '5432'),
+           # "ATOMIC_REQUESTS": True,
         }
     }
 else:
